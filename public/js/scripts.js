@@ -8,7 +8,8 @@
  */
 
 var main = (function(){
-"use strict";
+  'use strict';
+
   var main = {};
 
   // TODO reorder/clean up constants
@@ -4531,6 +4532,7 @@ var main = (function(){
     if (readOnly) {
       return;
     }
+    console.log(event);
 
     ignoreStreetChanges = true;
 
@@ -7225,11 +7227,7 @@ var main = (function(){
     document.querySelector('#share-via-twitter').addEventListener('click', _shareViaTwitter);
     document.querySelector('#share-via-facebook').addEventListener('click', _shareViaFacebook);
 
-    if (system.touch) {
-      document.querySelector('#dialog-box-shield').addEventListener('touchstart', _hideDialogBoxes);
-    } else {
-      document.querySelector('#dialog-box-shield').addEventListener('click', _hideDialogBoxes);
-    }
+    document.querySelector('#dialog-box-shield').addEventListener('pointerdown', _hideDialogBoxes);
     document.querySelector('#about .close').addEventListener('click', _hideAboutDialogBox);
 
     document.querySelector('#about-streetmix').addEventListener('click', _showAboutDialogBox);
@@ -7237,11 +7235,7 @@ var main = (function(){
     document.querySelector('#street-scroll-indicator-left').addEventListener('click', _onStreetLeftScrollClick);
     document.querySelector('#street-scroll-indicator-right').addEventListener('click', _onStreetRightScrollClick);
 
-    if (system.touch) {
-      document.querySelector('#welcome .close').addEventListener('touchstart', _hideWelcome);
-    } else {
-      document.querySelector('#welcome .close').addEventListener('click', _hideWelcome);
-    }
+    document.querySelector('#welcome .close').addEventListener('pointerdown', _hideWelcome);
     document.querySelector('#save-as-image-dialog .close').addEventListener('click', _hideSaveAsImageDialogBox);
 
     document.querySelector('#save-as-image').addEventListener('click', _showSaveAsImageDialogBox);
@@ -7288,11 +7282,7 @@ var main = (function(){
 
     window.addEventListener('storage', _onStorageChange);
 
-    if (system.touch) {
-      document.querySelector('#gallery-link a').addEventListener('touchstart', _onMyStreetsClick);
-    } else {
-      document.querySelector('#gallery-link a').addEventListener('click', _onMyStreetsClick);
-    }
+    document.querySelector('#gallery-link a').addEventListener('pointerdown', _onMyStreetsClick);
 
     document.querySelector('#sign-out-link').addEventListener('click', _onSignOutClick);
 
@@ -7308,20 +7298,11 @@ var main = (function(){
     window.addEventListener('beforeunload', _onWindowBeforeUnload);
 
     if (!readOnly) {
-      if (system.touch) {
-        document.querySelector('#street-name').addEventListener('touchstart', _askForStreetName);
-      } else {
-        document.querySelector('#street-name').addEventListener('click', _askForStreetName);
-      }
+      document.querySelector('#street-name').addEventListener('pointerdown', _askForStreetName);
     }
 
-    if (system.touch) {
-      document.querySelector('#undo').addEventListener('touchstart', _undo);
-      document.querySelector('#redo').addEventListener('touchstart', _redo);
-    } else {
-      document.querySelector('#undo').addEventListener('click', _undo);
-      document.querySelector('#redo').addEventListener('click', _redo);
-    }
+    document.querySelector('#undo').addEventListener('pointerdown', _undo);
+    document.querySelector('#redo').addEventListener('pointerdown', _redo);
 
     if (!readOnly) {
       document.querySelector('#street-width-read').addEventListener('click', _onStreetWidthClick);
@@ -7334,15 +7315,9 @@ var main = (function(){
 
     $(document).mouseleave(_onBodyMouseOut);
 
-    if (!system.touch) {
-      window.addEventListener('mousedown', _onBodyMouseDown);
-      window.addEventListener('mousemove', _onBodyMouseMove);
-      window.addEventListener('mouseup', _onBodyMouseUp);
-    } else {
-      window.addEventListener('touchstart', _onBodyMouseDown);
-      window.addEventListener('touchmove', _onBodyMouseMove);
-      window.addEventListener('touchend', _onBodyMouseUp);
-    }
+    window.addEventListener('pointerdown', _onBodyMouseDown);
+    window.addEventListener('pointermove', _onBodyMouseMove);
+    window.addEventListener('pointerup', _onBodyMouseUp);
     window.addEventListener('keydown', _onGlobalKeyDown);
 
     /*if (system.touch) {
@@ -7936,11 +7911,7 @@ var main = (function(){
         var el = document.createElement('div');
         el.classList.add('description-prompt');
         el.innerHTML = (description.prompt) ? description.prompt : 'Learn more';
-        if (system.touch) {
-          el.addEventListener('touchstart', _infoBubble.showDescription);
-        } else {
-          el.addEventListener('click', _infoBubble.showDescription);
-        }
+        el.addEventListener('pointerdown', _infoBubble.showDescription);
         $(el).mouseenter(_infoBubble.highlightTriangle);
         $(el).mouseleave(_infoBubble.unhighlightTriangle);
         _infoBubble.el.appendChild(el);
@@ -7972,11 +7943,7 @@ var main = (function(){
         var innerEl = document.createElement('div');
         innerEl.classList.add('description-close');
         innerEl.innerHTML = 'Close';
-        if (system.touch) {
-          innerEl.addEventListener('touchstart', _infoBubble.hideDescription);
-        } else {
-          innerEl.addEventListener('click', _infoBubble.hideDescription);
-        }
+        innerEl.addEventListener('pointerdown', _infoBubble.hideDescription);
         $(innerEl).mouseenter(_infoBubble.highlightTriangle);
         $(innerEl).mouseleave(_infoBubble.unhighlightTriangle);
         el.appendChild(innerEl);
@@ -8172,11 +8139,7 @@ var main = (function(){
         innerEl.segmentEl = _infoBubble.segmentEl;
         innerEl.tabIndex = -1;
         innerEl.setAttribute('title', msg('TOOLTIP_REMOVE_SEGMENT'));
-        if (system.touch) {
-          innerEl.addEventListener('touchstart', _onRemoveButtonClick);
-        } else {
-          innerEl.addEventListener('click', _onRemoveButtonClick);
-        }
+        innerEl.addEventListener('pointerdown', _onRemoveButtonClick);
         headerEl.appendChild(innerEl);
       }
 
@@ -8208,11 +8171,7 @@ var main = (function(){
         var func = function() {
           _changeBuildingHeight(_infoBubble.type == INFO_BUBBLE_TYPE_LEFT_BUILDING, true);
         }
-        if (system.touch) {
-          innerEl.addEventListener('touchstart', func);
-        } else {
-          innerEl.addEventListener('click', func);
-        }
+        innerEl.addEventListener('pointerdown', func);
         widthCanvasEl.appendChild(innerEl);
         if (!system.touch) {
           var innerEl = document.createElement('input');
@@ -8247,11 +8206,7 @@ var main = (function(){
         var func = function() {
           _changeBuildingHeight(_infoBubble.type == INFO_BUBBLE_TYPE_LEFT_BUILDING, false);
         }
-        if (system.touch) {
-          innerEl.addEventListener('touchstart', func);
-        } else {
-          innerEl.addEventListener('click', func);
-        }
+        innerEl.addEventListener('pointerdown', func);
         widthCanvasEl.appendChild(innerEl);
 
         infoBubbleEl.appendChild(widthCanvasEl);
@@ -8273,11 +8228,7 @@ var main = (function(){
         innerEl.segmentEl = segment.el;
         innerEl.title = msg('TOOLTIP_DECREASE_WIDTH');
         innerEl.tabIndex = -1;
-        if (system.touch) {
-          innerEl.addEventListener('touchstart', _onWidthDecrementClick);
-        } else {
-          innerEl.addEventListener('click', _onWidthDecrementClick);
-        }
+        innerEl.addEventListener('pointerdown', _onWidthDecrementClick);
         innerEl.addEventListener('mouseover', _showWidthChart);
         innerEl.addEventListener('mouseout', _hideWidthChart);
         widthCanvasEl.appendChild(innerEl);
@@ -8312,11 +8263,7 @@ var main = (function(){
         innerEl.segmentEl = segment.el;
         innerEl.tabIndex = -1;
         innerEl.title = msg('TOOLTIP_INCREASE_WIDTH');
-        if (system.touch) {
-          innerEl.addEventListener('touchstart', _onWidthIncrementClick);
-        } else {
-          innerEl.addEventListener('click', _onWidthIncrementClick);
-        }
+        innerEl.addEventListener('pointerdown', _onWidthIncrementClick);
         innerEl.addEventListener('mouseover', _showWidthChart);
         innerEl.addEventListener('mouseout', _hideWidthChart);
         widthCanvasEl.appendChild(innerEl);
@@ -8352,19 +8299,11 @@ var main = (function(){
                 el.disabled = true;
               }
 
-              if (system.touch) {
-                el.addEventListener('touchstart', (function(dataNo, variantName, variantChoice) {
-                  return function() {
-                    _changeSegmentVariant(dataNo, variantName, variantChoice);
-                  }
-                })(segment.el.dataNo, variantName, variantChoice));
-              } else {
-                el.addEventListener('click', (function(dataNo, variantName, variantChoice) {
-                  return function() {
-                    _changeSegmentVariant(dataNo, variantName, variantChoice);
-                  }
-                })(segment.el.dataNo, variantName, variantChoice));
-              }
+              el.addEventListener('pointerdown', (function(dataNo, variantName, variantChoice) {
+                return function() {
+                  _changeSegmentVariant(dataNo, variantName, variantChoice);
+                }
+              })(segment.el.dataNo, variantName, variantChoice));
 
               variantsEl.appendChild(el);
             }
@@ -8388,19 +8327,11 @@ var main = (function(){
 
             variantsEl.appendChild(el);
 
-            if (system.touch) {
-              el.addEventListener('touchstart', (function(left, variantChoice) {
-                return function() {
-                  _infoBubble.onBuildingVariantButtonClick(null, left, variantChoice);
-                }
-              })(_infoBubble.type == INFO_BUBBLE_TYPE_LEFT_BUILDING, BUILDING_VARIANTS[j]));
-            } else {
-              el.addEventListener('click', (function(left, variantChoice) {
-                return function() {
-                  _infoBubble.onBuildingVariantButtonClick(null, left, variantChoice);
-                }
-              })(_infoBubble.type == INFO_BUBBLE_TYPE_LEFT_BUILDING, BUILDING_VARIANTS[j]));
-            }
+            el.addEventListener('pointerdown', (function(left, variantChoice) {
+              return function() {
+                _infoBubble.onBuildingVariantButtonClick(null, left, variantChoice);
+              }
+            })(_infoBubble.type == INFO_BUBBLE_TYPE_LEFT_BUILDING, BUILDING_VARIANTS[j]));
           }
 
           break;
@@ -8584,11 +8515,7 @@ var main = (function(){
 
       var el = document.createElement('button');
       el.classList.add('close');
-      if (system.touch) {
-        el.addEventListener('touchstart', _statusMessage.hide);
-      } else {
-        el.addEventListener('click', _statusMessage.hide);
-      }
+      el.addEventListener('pointerdown', _statusMessage.hide);
       el.innerHTML = msg('UI_GLYPH_X');
       document.querySelector('#status-message > div').appendChild(el);
 
@@ -9098,11 +9025,7 @@ var main = (function(){
     buttonEl.classList.add('scroll-left');
     buttonEl.el = el;
     buttonEl.disabled = true;
-    if (system.touch) {
-      buttonEl.addEventListener('touchstart', _onScrollButtonLeft);
-    } else {
-      buttonEl.addEventListener('click', _onScrollButtonLeft);
-    }
+    buttonEl.addEventListener('pointerdown', _onScrollButtonLeft);
     el.parentNode.appendChild(buttonEl);
 
     var buttonEl = document.createElement('button');
@@ -9110,11 +9033,7 @@ var main = (function(){
     buttonEl.classList.add('scroll-right');
     buttonEl.el = el;
     buttonEl.disabled = true;
-    if (system.touch) {
-      buttonEl.addEventListener('touchstart', _onScrollButtonRight);
-    } else {
-      buttonEl.addEventListener('click', _onScrollButtonRight);
-    }
+    buttonEl.addEventListener('pointerdown', _onScrollButtonRight);
     el.parentNode.appendChild(buttonEl);
 
     el.setAttribute('scroll-buttons', true);
