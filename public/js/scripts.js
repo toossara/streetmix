@@ -4394,12 +4394,14 @@ var main = (function(){
       return;
     }
 
-    if (event.touches && event.touches[0]) {
-      var x = event.touches[0].pageX;
-      var y = event.touches[0].pageY;
+    // Using Points.js to normalize input events
+    //if (event.touches && event.touches[0]) {
+    if (event.pointerType === 'touch') {
+      var x = event.originalEvent.touches[0].pageX;
+      var y = event.originalEvent.touches[0].pageY;
     } else {
-      var x = event.pageX;
-      var y = event.pageY;
+      var x = event.originalEvent.pageX;
+      var y = event.originalEvent.pageY;
     }
 
     ignoreStreetChanges = true;
@@ -4490,12 +4492,14 @@ var main = (function(){
   }
 
   function _handleSegmentResizeMove(event) {
-    if (event.touches && event.touches[0]) {
-      var x = event.touches[0].pageX;
-      var y = event.touches[0].pageY;
+    // Using Points.js to normalize input events
+    //if (event.touches && event.touches[0]) {
+    if (event.pointerType === 'touch') {
+      var x = event.originalEvent.touches[0].pageX;
+      var y = event.originalEvent.touches[0].pageY;
     } else {
-      var x = event.pageX;
-      var y = event.pageY;
+      var x = event.originalEvent.pageX;
+      var y = event.originalEvent.pageY;
     }
 
     var deltaX = x - draggingResize.mouseX;
@@ -4536,12 +4540,14 @@ var main = (function(){
 
     ignoreStreetChanges = true;
 
-    if (event.touches && event.touches[0]) {
-      var x = event.touches[0].pageX;
-      var y = event.touches[0].pageY;
+    // Using Points.js to normalize input events
+    //if (event.touches && event.touches[0]) {
+    if (event.pointerType === 'touch') {
+      var x = event.originalEvent.touches[0].pageX;
+      var y = event.originalEvent.touches[0].pageY;
     } else {
-      var x = event.pageX;
-      var y = event.pageY;
+      var x = event.originalEvent.pageX;
+      var y = event.originalEvent.pageY;
     }
 
     var el = event.target;
@@ -4648,12 +4654,14 @@ var main = (function(){
   }
 
   function _handleSegmentClickOrMoveMove(event) {
-    if (event.touches && event.touches[0]) {
-      var x = event.touches[0].pageX;
-      var y = event.touches[0].pageY;
+    // Using Points.js to normalize input events
+    //if (event.touches && event.touches[0]) {
+    if (event.pointerType === 'touch') {
+      var x = event.originalEvent.touches[0].pageX;
+      var y = event.originalEvent.touches[0].pageY;
     } else {
-      var x = event.pageX;
-      var y = event.pageY;
+      var x = event.originalEvent.pageX;
+      var y = event.originalEvent.pageY;
     }
 
     var deltaX = x - draggingMove.mouseX;
@@ -4667,12 +4675,14 @@ var main = (function(){
   }
 
   function _handleSegmentMoveMove(event) {
-    if (event.touches && event.touches[0]) {
-      var x = event.touches[0].pageX;
-      var y = event.touches[0].pageY;
+    // Using Points.js to normalize input events
+    //if (event.touches && event.touches[0]) {
+    if (event.pointerType === 'touch') {
+      var x = event.originalEvent.touches[0].pageX;
+      var y = event.originalEvent.touches[0].pageY;
     } else {
-      var x = event.pageX;
-      var y = event.pageY;
+      var x = event.originalEvent.pageX;
+      var y = event.originalEvent.pageY;
     }
 
     var deltaX = x - draggingMove.mouseX;
@@ -4755,7 +4765,7 @@ var main = (function(){
   function _onBodyMouseDown(event) {
     var el = event.target;
 
-    if (readOnly || (event.touches && event.touches.length != 1)) {
+    if (readOnly || (event.originalEvent.touches && event.originalEvent.touches.length != 1)) {
       return;
     }
 
