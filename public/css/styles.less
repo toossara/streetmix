@@ -944,7 +944,7 @@ body:not(.segment-resize-dragging) .segment.outside .image {
   opacity: 0;
 }
 
-body:not(.touch-support) .segment.palette:hover {
+body:not(.touch-support-only) .segment.palette:hover {
   background: fadeout(@skyColour, 5%);
 
   canvas {
@@ -2640,10 +2640,10 @@ a.button-like {
   }
 }
 
-body:not(.touch-support) .touch-only {
+body:not(.touch-support-only) .touch-only {
   display: none;
 }
-body.touch-support .non-touch-only {
+body.touch-support-only .non-touch-only {
   display: none;
 }
 

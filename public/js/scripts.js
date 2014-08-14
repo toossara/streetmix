@@ -2705,7 +2705,7 @@ var main = (function(){
       _resizeSegment(el, RESIZE_TYPE_INITIAL, width, true, palette, true);
     }
 
-    if (!palette && !system.touch) {
+    if (!palette) {
       $(el).mouseenter(_onSegmentMouseEnter);
       $(el).mouseleave(_onSegmentMouseLeave);
     }
@@ -3092,6 +3092,11 @@ var main = (function(){
 
   function _onBuildingMouseLeave() {
     _infoBubble.dontConsiderShowing();
+  }
+
+  function _onBuildingTouchStart(event) {
+    event.preventDefault();  // Cancel all further mouse-event firings
+    _onBuildingMouseEnter(event);
   }
 
   function _createDomFromData() {
@@ -4394,8 +4399,6 @@ var main = (function(){
       return;
     }
 
-    // Using Points.js to normalize input events
-    //if (event.touches && event.touches[0]) {
     if (event.pointerType === 'touch') {
       var x = event.originalEvent.touches[0].pageX;
       var y = event.originalEvent.touches[0].pageY;
@@ -4492,8 +4495,6 @@ var main = (function(){
   }
 
   function _handleSegmentResizeMove(event) {
-    // Using Points.js to normalize input events
-    //if (event.touches && event.touches[0]) {
     if (event.pointerType === 'touch') {
       var x = event.originalEvent.touches[0].pageX;
       var y = event.originalEvent.touches[0].pageY;
@@ -4540,8 +4541,6 @@ var main = (function(){
 
     ignoreStreetChanges = true;
 
-    // Using Points.js to normalize input events
-    //if (event.touches && event.touches[0]) {
     if (event.pointerType === 'touch') {
       var x = event.originalEvent.touches[0].pageX;
       var y = event.originalEvent.touches[0].pageY;
@@ -4654,8 +4653,6 @@ var main = (function(){
   }
 
   function _handleSegmentClickOrMoveMove(event) {
-    // Using Points.js to normalize input events
-    //if (event.touches && event.touches[0]) {
     if (event.pointerType === 'touch') {
       var x = event.originalEvent.touches[0].pageX;
       var y = event.originalEvent.touches[0].pageY;
@@ -4675,8 +4672,6 @@ var main = (function(){
   }
 
   function _handleSegmentMoveMove(event) {
-    // Using Points.js to normalize input events
-    //if (event.touches && event.touches[0]) {
     if (event.pointerType === 'touch') {
       var x = event.originalEvent.touches[0].pageX;
       var y = event.originalEvent.touches[0].pageY;
@@ -4694,7 +4689,7 @@ var main = (function(){
     if (!draggingMove.floatingElVisible) {
       draggingMove.floatingElVisible = true;
 
-      if (system.touch) {
+      if (event.pointerType === 'touch') {
         if (draggingMove.type == DRAGGING_TYPE_MOVE_CREATE) {
           draggingMove.elY += DRAG_OFFSET_Y_TOUCH_PALETTE;
         } else {
@@ -4897,8 +4892,8 @@ var main = (function(){
     _resumeFadeoutControls();
   }
 
-  function _resumeFadeoutControls() {
-    if (!system.touch) {
+  function _resumeFadeoutControls(event) {
+    if (event && event.pointerType !== 'touch') {
       return;
     }
 
@@ -5960,8 +5955,8 @@ var main = (function(){
     if (debug.forceReadOnly) {
       url += '&debug-force-read-only';
     }
-    if (debug.forceTouch) {
-      url += '&debug-force-touch';
+    if (debug.forceTouchOnly) {
+      url += '&debug-force-touch-only';
     }
     if (debug.forceLiveUpdate) {
       url += '&debug-force-live-update';
@@ -7256,20 +7251,20 @@ var main = (function(){
 
     document.querySelector('#street-section-outer').addEventListener('scroll', _onStreetSectionScroll);
 
-    if (!system.touch) {
+    //if (!system.touch) {
       $('#street-section-left-building').mouseenter(_onBuildingMouseEnter);
       $('#street-section-left-building').mouseleave(_onBuildingMouseLeave);
       $('#street-section-right-building').mouseenter(_onBuildingMouseEnter);
       $('#street-section-right-building').mouseleave(_onBuildingMouseLeave);
-    } else {
-      document.querySelector('#street-section-left-building').addEventListener('touchstart', _onBuildingMouseEnter);
-      document.querySelector('#street-section-right-building').addEventListener('touchstart', _onBuildingMouseEnter);
-    }
+    //} else {
+      document.querySelector('#street-section-left-building').addEventListener('touchstart', _onBuildingTouchStart);
+      document.querySelector('#street-section-right-building').addEventListener('touchstart', _onBuildingTouchStart);
+    //}
 
-    if (!system.touch) {
+    //if (!system.touch) {
       $('.info-bubble').mouseenter(_infoBubble.onMouseEnter);
       $('.info-bubble').mouseleave(_infoBubble.onMouseLeave);
-    }
+    //}
     document.querySelector('.info-bubble').addEventListener('touchstart', _infoBubble.onTouchStart);
 
     document.querySelector('#feedback-form-message').addEventListener('input', _onFeedbackFormInput);
@@ -7372,8 +7367,8 @@ var main = (function(){
       document.body.classList.add('safari');
     }
 
-    if (system.touch) {
-      document.body.classList.add('touch-support');
+    if (system.touchOnly) {
+      document.body.classList.add('touch-support-only');
     }
 
     if (readOnly) {
@@ -7391,11 +7386,12 @@ var main = (function(){
     // This function might be called on very old browsers. Please make
     // sure not to use modern faculties.
 
-    if (debug.forceTouch) {
-      system.touch = true;
+    if (debug.forceTouchOnly) {
+      system.touchOnly = true;
     } else {
-      system.touch = Modernizr.touch;
+      system.touchOnly = false;
     }
+
     system.pageVisibility = Modernizr.pagevisibility;
     if (debug.forceNonRetina) {
       system.hiDpi = 1.0;
@@ -7614,8 +7610,9 @@ var main = (function(){
       window.clearTimeout(_infoBubble.suppressTimerId);
     },
 
-    onTouchStart: function() {
-      _resumeFadeoutControls();
+    onTouchStart: function(event) {
+      event.preventDefault(); // Prevent firing mouse events
+      _resumeFadeoutControls(event);
     },
 
     onMouseEnter: function() {
@@ -8183,7 +8180,7 @@ var main = (function(){
         }
         innerEl.addEventListener('pointerdown', func);
         widthCanvasEl.appendChild(innerEl);
-        if (!system.touch) {
+        if (!system.touchOnly) {
           var innerEl = document.createElement('input');
           innerEl.setAttribute('type', 'text');
           innerEl.classList.add('height');
@@ -8243,7 +8240,7 @@ var main = (function(){
         innerEl.addEventListener('mouseout', _hideWidthChart);
         widthCanvasEl.appendChild(innerEl);
 
-        if (!system.touch) {
+        if (!system.touchOnly) {
           var innerEl = document.createElement('input');
           innerEl.setAttribute('type', 'text');
           innerEl.classList.add('width');
@@ -8578,8 +8575,8 @@ var main = (function(){
     }
   }
 
-  function _prepareFeedbackForm() {
-    if (!system.touch) {
+  function _prepareFeedbackForm(event) {
+    if (event.pointerType !== 'touch') {
       window.setTimeout(function() {
         document.querySelector('#feedback-form-message').focus();
       }, 200);
@@ -8597,7 +8594,7 @@ var main = (function(){
     document.querySelector('#feedback-form .thank-you').classList.remove('visible');
   }
 
-  function _onFeedbackMenuClick() {
+  function _onFeedbackMenuClick(event) {
     var el = document.querySelector('#feedback-menu');
 
     _infoBubble.hide();
@@ -8609,7 +8606,7 @@ var main = (function(){
 
       el.classList.add('visible');
 
-      _prepareFeedbackForm();
+      _prepareFeedbackForm(event);
     } else {
       _hideMenus();
     }
@@ -8631,7 +8628,7 @@ var main = (function(){
     }
   }
 
-  function _onShareMenuClick() {
+  function _onShareMenuClick(event) {
     var el = document.querySelector('#share-menu');
 
     _infoBubble.hide();
@@ -8645,7 +8642,7 @@ var main = (function(){
 
       _prepareFeedbackForm();
 
-      if (!system.touch) {
+      if (event.pointerType !== 'touch') {
         window.setTimeout(function() {
           document.querySelector('#share-via-link').focus();
           document.querySelector('#share-via-link').select();
@@ -9836,8 +9833,8 @@ var main = (function(){
       debug.forceReadOnly = true;
     }
 
-    if (url.match(/[\?\&]debug-force-touch\&?/)) {
-      debug.forceTouch = true;
+    if (url.match(/[\?\&]debug-force-touch-only\&?/)) {
+      debug.forceTouchOnly = true;
     }
 
     if (url.match(/[\?\&]debug-force-live-update\&?/)) {
