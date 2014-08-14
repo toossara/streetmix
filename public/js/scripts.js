@@ -4537,7 +4537,6 @@ var main = (function(){
     if (readOnly) {
       return;
     }
-    console.log(event);
 
     ignoreStreetChanges = true;
 
@@ -8640,7 +8639,7 @@ var main = (function(){
 
       el.classList.add('visible');
 
-      _prepareFeedbackForm();
+      _prepareFeedbackForm(event);
 
       if (event.pointerType !== 'touch') {
         window.setTimeout(function() {
