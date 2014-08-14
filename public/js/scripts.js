@@ -2581,7 +2581,7 @@ var main = (function(){
     var precise = event.shiftKey;
 
     _incrementSegmentWidth(segmentEl, false, precise);
-    _scheduleControlsFadeout(segmentEl);
+    _scheduleControlsFadeout(segmentEl, event);
 
     _eventTracking.track(TRACK_CATEGORY_INTERACTION, TRACK_ACTION_CHANGE_WIDTH,
         TRACK_LABEL_INCREMENT_BUTTON, null, true);
@@ -2593,7 +2593,7 @@ var main = (function(){
     var precise = event.shiftKey;
 
     _incrementSegmentWidth(segmentEl, true, precise);
-    _scheduleControlsFadeout(segmentEl);
+    _scheduleControlsFadeout(segmentEl, event);
 
     _eventTracking.track(TRACK_CATEGORY_INTERACTION, TRACK_ACTION_CHANGE_WIDTH,
         TRACK_LABEL_INCREMENT_BUTTON, null, true);
@@ -3087,7 +3087,7 @@ var main = (function(){
     }
 
     _infoBubble.considerShowing(event, this, type);
-    _resumeFadeoutControls();
+    _resumeFadeoutControls(event);
   }
 
   function _onBuildingMouseLeave() {
@@ -4885,13 +4885,14 @@ var main = (function(){
   var controlsFadeoutDelayTimer = -1;
   var controlsFadeoutHideTimer = -1;
 
-  function _scheduleControlsFadeout(el) {
+  function _scheduleControlsFadeout(el, event) {
     _infoBubble.considerShowing(null, el, INFO_BUBBLE_TYPE_SEGMENT);
 
-    _resumeFadeoutControls();
+    _resumeFadeoutControls(event);
   }
 
   function _resumeFadeoutControls(event) {
+    console.log(event);
     if (event && event.pointerType !== 'touch') {
       return;
     }
@@ -5141,7 +5142,7 @@ var main = (function(){
     _changeDraggingType(DRAGGING_TYPE_NONE);
 
     if (segmentElControls) {
-      _scheduleControlsFadeout(segmentElControls);
+      _scheduleControlsFadeout(segmentElControls, event);
     }
 
     if (failedDrop) {
@@ -5180,7 +5181,7 @@ var main = (function(){
     _infoBubble.considerSegmentEl = draggingResize.segmentEl;
     _infoBubble.show(false);
 
-    _scheduleControlsFadeout(draggingResize.segmentEl);
+    _scheduleControlsFadeout(draggingResize.segmentEl, event);
 
     _hideWidthChart();
 
